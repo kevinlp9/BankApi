@@ -33,5 +33,14 @@ namespace BankApi.Controllers
             return client;
         }
 
+        [HttpPost]
+        public IActionResult Create(Client client)
+        {
+            _context.Clients.Add(client);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById), new { id = client.ID }, client);
+        }
+
     }
 }
