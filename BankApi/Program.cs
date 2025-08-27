@@ -2,6 +2,7 @@ using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using BankApi.Data;
 using Microsoft.EntityFrameworkCore;
+using BankApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +13,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BankConnection")));
+
+
+//Service Layer
+builder.Services.AddScoped<ClientService>();
+
 
 var app = builder.Build();
 

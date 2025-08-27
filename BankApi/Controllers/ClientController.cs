@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BankApi.Data; 
 using BankApi.Models;
- 
+using BankApi.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace BankApi.Controllers
 
 {
@@ -9,38 +11,75 @@ namespace BankApi.Controllers
     [Route("api/[controller]")]
     public class ClientController : Controller
     {
-        private readonly BankContext _context;
-        public ClientController(BankContext context)
+        private readonly ClientService _service;
+        public ClientController(ClientService service)
         {
-            _context = context;
+            _service = service;
 
         }
 
         [HttpGet]
-        public IEnumerable<Client> Get()
+        public async Task<IEnumerable<Client>> Get()
         {
-            return _context.Clients.ToList();
+            return await _service.GetAllClientsAsync();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Client> GetById(int id)
+        public async Task<ActionResult<Client>> GetById(int id)
         {
-            var client = _context.Clients.Find(id);
-            if (client == null)
+            var client = await _service.GetClientByIdAsync(id);
+            if (client is null)
             {
                 return NotFound();
             }
+
             return client;
         }
 
         [HttpPost]
-        public IActionResult Create(Client client)
+        public async Task<IActionResult> CreateClientAsync(Client client)
         {
-            _context.Clients.Add(client);
-            _context.SaveChanges();
-
+            var newClient = await _service.CreateClientAsync(client);
             return CreatedAtAction(nameof(GetById), new { id = client.ID }, client);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Client client)
+        {
+            if (id != client.ID)
+                return BadRequest();
+
+            var clientToUpdate = await _service.GetClientByIdAsync(id);
+
+            if (clientToUpdate is not null)
+            {
+                await _service.UpdateClientAsync(id, client);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task <IActionResult> DeleteClientAsync(int id)
+        {
+
+            var clientToDelete = await _service.GetClientByIdAsync(id);
+
+            if (clientToDelete is not null)
+            {
+                await _service.DeleteClientAsync(id);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
 
     }
 }
