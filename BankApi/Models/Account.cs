@@ -1,4 +1,7 @@
-﻿namespace BankApi.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace BankApi.Models
 {
     public class Account
     {
@@ -10,8 +13,11 @@
 
         //Relaciones
 
+        [JsonIgnore]
         public Client? Client { get; set; }
+        [JsonIgnore]
         public AccountType? AccountTypeNavigation { get; set; }
+        [JsonIgnore]
         public ICollection<BankTransaction> BankTransactions { get; set; } = new List<BankTransaction>();
     }
 
@@ -44,15 +50,20 @@
     {
         public int ID { get; set; }
 
+        [MaxLength(200, ErrorMessage = "Name must to be less than 200 characters")]
         public string Name { get; set; } = string.Empty;
 
+        [MaxLength(40, ErrorMessage = "Number phone must to be less 40 characters")]
         public string PhoneNumber { get; set; } = string.Empty;
 
+        [MaxLength(40, ErrorMessage = "Email must to be less than 50 characters")]
+        [EmailAddress(ErrorMessage = "Incorrect format Email")]
         public string? Email { get; set; }
 
         public DateTime RegDate { get; set; } = DateTime.Now;
 
         // Relaciones
+        [JsonIgnore]
         public ICollection<Account> Accounts { get; set; } = new List<Account>();
     }
 

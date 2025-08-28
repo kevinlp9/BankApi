@@ -30,7 +30,7 @@ namespace BankApi.Controllers
             var client = await _service.GetClientByIdAsync(id);
             if (client is null)
             {
-                return NotFound();
+                return ClientNotFound(id);
             }
 
             return client;
@@ -40,7 +40,7 @@ namespace BankApi.Controllers
         public async Task<IActionResult> CreateClientAsync(Client client)
         {
             var newClient = await _service.CreateClientAsync(client);
-            return CreatedAtAction(nameof(GetById), new { id = client.ID }, client);
+            return CreatedAtAction(nameof(GetById), new { id = newClient.ID }, newClient);
         }
 
         [HttpPut("{id}")]
@@ -58,7 +58,7 @@ namespace BankApi.Controllers
             }
             else
             {
-                return NotFound();
+                return ClientNotFound(id);
             }
         }
 
@@ -75,8 +75,13 @@ namespace BankApi.Controllers
             }
             else
             {
-                return NotFound();
+                return ClientNotFound(id);
             }
+        }
+
+        public NotFoundObjectResult ClientNotFound(int id)
+        {
+            return NotFound(new { Message = $"Client with ID {id} not found." });
         }
 
 
