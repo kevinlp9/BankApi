@@ -8,7 +8,7 @@ namespace BankApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly AccountService _service;
         public AccountController(AccountService service)
@@ -42,6 +42,7 @@ namespace BankApi.Controllers
             return CreatedAtAction(nameof(GetAccountByIdAsync), new { id = newAccount.ID }, newAccount);
         }
 
+        [NonAction]
         public NotFoundObjectResult AccountNotFounded(int id)
         {
             return NotFound(new { Message = $"Account with ID {id} not found." });

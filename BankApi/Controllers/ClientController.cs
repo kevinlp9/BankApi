@@ -9,7 +9,7 @@ namespace BankApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : Controller
+    public class ClientController : ControllerBase
     {
         private readonly ClientService _service;
         public ClientController(ClientService service)
@@ -79,6 +79,7 @@ namespace BankApi.Controllers
             }
         }
 
+        [NonAction]
         public NotFoundObjectResult ClientNotFound(int id)
         {
             return NotFound(new { Message = $"Client with ID {id} not found." });
