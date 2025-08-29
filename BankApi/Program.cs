@@ -18,6 +18,7 @@ builder.Services.AddDbContext<BankContext>(options =>
 //Service Layer
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<AccountTypeService>();
 
 
 var app = builder.Build();
